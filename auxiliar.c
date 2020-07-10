@@ -4,13 +4,7 @@
 //                                                ||
 //================================================||
 
-
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "auxiliar.h"
-
-
 
 //-----------------------------------------------------------------
 // Funciones para descomponer la informacion de la variable estado

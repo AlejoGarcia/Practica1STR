@@ -11,15 +11,22 @@
 #define AUXILIAR_H
 
 
+// Importamos el resto de librerias necesarias para implementar las funciones
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 // Cadenas que se emplearán en la interfaz de la calculadora de forma recurrente (formatear de ser necesario)
 
 #define TEXTOTITULO "             Calculadora Binaria Simple             "
 #define BARRA "------------------------------------------------------"
 #define BARRA2 "-------------"
-#define ESPACIO "                                                    "
-char Opciones[11][50] = {"SALIR", "OR lógico", "AND lógico", "XOR lógico", "<< (desplazamiento a la izquierda)", ">> (desplazamiento a la derecha)", "Cambio de formato (0→ binario, 1→ hexadecimal)", "Habilitar memoria", "Deshabilitar memoria", "Borrar memoria", "Mostrar el contenido de la memoria"}; // Cadenas con los nombres de las distintas operaciones posibles
-char Operaciones[6][3] = {"", "OR", "AND", "XOR", "<<", ">>"};
+#define ESPACIO "                                                   "
+
+static const char Opciones[11][50] = {"SALIR", "OR lógico", "AND lógico", "XOR lógico", "<< (desplazamiento a la izquierda)", ">> (desplazamiento a la derecha)", "Cambio de formato (0→ binario, 1→ hexadecimal)", "Habilitar memoria", "Deshabilitar memoria", "Borrar memoria", "Mostrar el contenido de la memoria"}; // Cadenas con los nombres de las distintas operaciones posibles
+
+static const char Operaciones[6][3] = {"", "OR", "AND", "XOR", "<<", ">>"};
 
 
 //----------------------------------------------------------------------------------
