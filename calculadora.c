@@ -3,10 +3,10 @@
 
 
 int main (void){
+
+    // Definición de las 6 variables del programa:
     
-    // Definición de las 5 variables del programa:
-    
-    unsigned char estado = 207;
+    unsigned char estado = 207; // 207 -> 11001111
         // estado es una variable de 8 bits formada por los siguientes flags:
             // bit 7: memoria habilitada (0 no, 1 si)
             // bit 6: formato (0 binario, 1 hexadecimal)
@@ -14,10 +14,13 @@ int main (void){
             // bit 4: sin uso
             // bits 3 a 0: codificación de la operación seleccionada siguiendo la
                 // numeración del menú 
-    
+
     int a, b, r;    
         // a, b y r funcionan como registros de operación 
-        // (a es primer operando, b el segundo y r almacena el resultado) 
+        // (a es primer operando, b el segundo y r almacena el resultado)
+
+    char bin[9];
+        // variable auxiliar para realizar las conversiones a formato binario
 
     node * memoria = NULL;   
         // memoria es un puntero a la estructura node sobre la que se implementa 
@@ -44,9 +47,9 @@ int main (void){
         
         // Actualizamos el valor del codigo de operacion en estado con el valor recibido
         estado |= (unsigned char) (a&15);
+        printf("Operación seleccionada:\t %s\n", opEnum[estadoOperacion(estado)]);
         
-        
-        switch(estado&15){
+        switch(operacionEstado(estado)){
             case 0:
                 printf("Saliendo del programa... \n");
                 estado |= 32;
@@ -56,13 +59,33 @@ int main (void){
             case 3:
             case 4:
             case 5:
-                r = ejecutar(estado,a,b);
+                if(estadoFormato(estado)){
+                    printf("Modo hexadecimal, valores de 0 a 4294967295\n");
+                    a = leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 4294967295)
+                    b = leeValor("Introduzca el segundo operando: ", "El valor introducido no es válido", 0, 4294967295);
+                    printf("\n");
+                    r = ejecutar(estado,a,b);
+                    printf("\t\t%x\n\t%s\t%x\n\t%s\n\t\t%x\n", a, soloOp[estadoOperacion(estado)], b, BARRA2, r);
+                } else { 
+                    printf("Modo binario, valores de 0 a 511\n");
+                    a = leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 511);
+                    b = leeValor("Introduzca el segundo operando: ", "El valor introducido no es válido", 0, 511);
+                    printf("\n");
+                    r = ejecutar(estado,a,b);
+                    aBinario(a, &bin);
+                    printf("\t\t%s\n\t%s\t", bin, soloOp[estadoOperacion(estado)]);
+                    aBinario(b, &bin);
+                    printf("%s\n\t%s\n\t\t", bin, BARRA2);
+                    aBinario(r, &bin);
+                    printf("%s\n",bin);
+                }
+                break;
             case 6:
                 a = leeValor("Seleccione el nuevo formato (0 - binario, 1 - hexadecimal): ", "Ese valor es válido\n",0,1);
                 if(a){
                    estado |= 64;
                    printf("Formato cambiado a hexadecimal\n");
-                }else{
+                } else {
                    estado &= ~64;
                    printf("Formato cambiado a binario\n");
                 }
@@ -77,20 +100,23 @@ int main (void){
                 break;
             case 9:
                 printf("Borrando el contenido de la memoria...\n");
-                if(borrarMemoria(memoria) == 0) printf("Memoria borrada\n");
-                else printf("Error al borrar memoria\n");
+                borraMemoria(memoria);
+                if(memoria == NULL) printf("Memoria borrada\n");
+                else printf("Error al borrar memoria.\n");
                 break;
             case 10:
                 printf("El contenido de la memoria es:\n");
-                imprimirMemoria(memoria);
+                imprimeMemoria(memoria);
                 break;
             default:
+                printf("Error... volviendo al menu.\n");
                 break;
         }
         
         // En caso de estar habilitada la memoria, guardamos la operación realizada
-        if(estado&128) guardar(estado,a,b,r);
-        
+        if(estadoMemoria(estado)) guardaOp(memoria, estado, a, b, r);
     }
+    
+    // Tras salir del bucle principial, el programa finaliza
     return 0;
 }

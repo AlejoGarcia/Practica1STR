@@ -1,8 +1,8 @@
-//==========================================================================================||
-//                                                                                          ||
-//      Header que contiene las funciones auxiliares para el programa de la calculadora     ||
-//                                                                                          ||
-//==========================================================================================||
+//================================================||
+//                                                ||
+//      Implementación del fichero auxiliar.h     ||
+//                                                ||
+//================================================||
 
 
 #include <string.h>
@@ -37,7 +37,7 @@ char estadoOperacion(char _cod){
 // Devuelve el nombre de la operación
 void nombreOp(char _cod, char** _nombre){
     strcpy(*_nombre, opEnum[estadoOperacion(_cod)]);
-} 
+}
 
 // Devuelve el condigo de la operación a partir del nombre
 char codigoOp(char* _nombre){
@@ -73,13 +73,13 @@ void mostrarMenu(){
 }
 
 // Lee un valor numérico del teclado entre dos cotas dadas
-int leeValor(char* msg, char* err, int min, int max){
+int leeValor(char* _msg, char* _err, int _min, int _max){
     int r;          
-    printf(msg);
+    printf("%s", _msg);
     scanf("%d",&r);
-    while((r < min)||(r > max)){
-        printf(err);
-        printf(msg);
+    while((r < _min)||(r > _max)){
+        printf("%s\n", _err);
+        printf("%s", _msg);
         scanf("%d",&r);
     }
     return r;
@@ -116,6 +116,7 @@ int ejecutar(char _cod, int _a, int _b){
     return r;
 }
 
+// Función auxiliar para pasar los datos a binario con 9 caracteres
 void aBinario(int _x, char** _bin){
     int i, m;
     m = 1;
@@ -128,7 +129,6 @@ void aBinario(int _x, char** _bin){
 
 
 
-
 //-----------------------------------------------------
 // Funciones para manejar la memoria de la calculadora
 //-----------------------------------------------------
@@ -136,13 +136,13 @@ void aBinario(int _x, char** _bin){
 /*
 
 La memoria se implementa como una lista continua de elementos que comienzan siempre por el código del propio
-comando (u operación) a guardar. Tras el, de ser necesario, se guardarán los argumentos (uno o varios en función
-de cada operación). Todos los datos numericos se guardarán en el formato en el que se ejecutaron.
+comando (u operación) a guardar. Tras él, de ser necesario, se guardarán los argumentos (uno o tres en función
+de cada operación). Todos los datos numéricos se guardarán en el formato en el que se ejecutaron.
 
 */
 
 // Guarda un elemento
-void guarda(nodo** _mem, int _x, char _f){
+void guardaElemento(nodo** _mem, int _x, char _f){
     nodo * aux = *_mem;
     if(aux == NULL){
         aux = (nodo*) malloc(sizeof(nodo));
@@ -161,6 +161,7 @@ void guarda(nodo** _mem, int _x, char _f){
             break;
         case 2:
             nombreOp((char)_x,aux->contenido.operacion);
+            aux->contenido.operacion[49] = _f;
             break;
         default:
             printf("\n***ERROR: funcion guardaElemento -> formato incorrecto.\n");
@@ -169,10 +170,10 @@ void guarda(nodo** _mem, int _x, char _f){
 }
 
 // Guarda una operacion
-void guarda(nodo** _mem, char _cod, int _a, int _b,int _r){
+void guardaOp(nodo** _mem, char _cod, int _a, int _b,int _r){
     char formato = estadoFormato(_cod);
-    guardaElemento(_mem,(int) _cod, 2);
-    switch(_cod&15){
+    guardaElemento(_mem, (int) _cod, 2);
+    switch(estadoOperacion(_cod)){
         case 1:
         case 2:
         case 3:
@@ -186,6 +187,7 @@ void guarda(nodo** _mem, char _cod, int _a, int _b,int _r){
             guardaElemento(_mem,_a,1);
             break;
         default:
+            printf("\n***ERROR: función guardaOp -> Operación inexistente.\n");
             break;
     }
 }
@@ -197,7 +199,7 @@ void borra(nodo** _mem){
         if (aux->siguiente == NULL){
             free(*_mem);
             *_mem = NULL;
-        }else {
+        } else {
             while(aux->siguiente->siguiente != NULL) aux = aux->siguiente;
             free(aux->siguiente);
             aux->siguiente = NULL;
@@ -206,10 +208,34 @@ void borra(nodo** _mem){
 }
 
 // Imprime el elemento al que apunta el puntero
-int imprime(nodo* _elem){
+char imprimeElem(nodo* _elem){
     nodo * aux = _elem;
-    printf("\t\t%s", aux->contenido.operacion);
-    if()
+    char cod = codigoOp(aux->contenido.operacion);
+    char n = 1;
+    char f = aux->contenido.operacion[49];
+    printf("\t%s", aux->contenido.operacion);
+    aux = aux->siguiente;
+    if((cod >= 1)&&(cod <= 5)){
+        printf(":\t");
+        if(f){
+            printf("%x %s ", aux->contenido.dato, soloOp[cod]);
+            aux = aux->siguiente;
+            printf("%x = ", aux->contenido.dato);
+            aux = aux->siguiente;
+            printf("%x \n", aux->contenido.dato);
+        } else {
+            printf("%s %s ", aux->contenido.dato_binario, soloOp[cod]);
+            aux = aux->siguiente;
+            printf("%s = ", aux->contenido.dato_binario);
+            aux = aux->siguiente;
+            printf("%s \n", aux->contenido.dato_binario);
+        }
+        n = 3;
+    }else if( != 6){
+        printf(": %d\n", aux->contenido.dato);
+        n = 2;
+    }
+    return n;
 }
 
 // Borra el contenido de la memoria al completo dejando el puntero de entrada como NULL
@@ -220,11 +246,14 @@ void borraMemoria(nodo** _mem){
 // Imprime de forma consecutiva todos los elementos contenidos en memoria
 void imprimeMemoria(nodo* _mem){
     nodo * aux = _mem;
-    int i, n;
+    int i, n, k;
     if(mem_ != NULL){
+        k = 1;
         while(aux != NULL){
-            n = imprime(aux);
+            printf("(%3d)",k);
+            n = imprimeElem(aux);
             for(i = 0; i < n; i++) aux = aux->siguiente;
+            k++;
         }
     } else printf("\nMEMORIA VACÍA\n");
 }
