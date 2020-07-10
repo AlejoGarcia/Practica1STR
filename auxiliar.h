@@ -14,8 +14,9 @@
 
 // Cadenas que se emplearán en la interfaz de la calculadora de forma recurrente (formatear de ser necesario)
 
-#define TEXTOTITULO "Calculadora Binaria Simple\n"
-#define BARRA "------------------------------------------------------\n"
+#define TEXTOTITULO "             Calculadora Binaria Simple             "
+#define BARRA "------------------------------------------------------"
+#define ESPACIO "                                                    "
 enum opEnum = {"SALIR", "OR lógico", "AND lógico", "XOR lógico", "<< (desplazamiento a la izquierda)", ">> (desplazamiento a la derecha)", "Cambio de formato (0→ binario, 1→ hexadecimal)", "Habilitar memoria", "Deshabilitar memoria", "Borrar memoria", "Mostrar el contenido de la memoria"} // Cadenas con los nombres de las distintas operaciones posibles
 
 

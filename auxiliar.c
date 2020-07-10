@@ -19,34 +19,58 @@ char estadoMemoria(char _cod){
     return (_cod&128)>>7;
 }
 
+// Devuelve el formato actual (binario 0, hexadecimal 1)
 char estadoFormato(char _cod){
     return (_cod&64)>>6;
 }
 
-char estadoFormato(char _cod){
+// Devuelve el bit de salida actual (no salir 0, salir 1)
+char estadoSalir(char _cod){
     return (_cod&32)>>5;
 }
 
+// Devuelve el codigo de la operación
 char estadoOperacion(char _cod){
     return _cod&15;
 }
 
+// Devuelve el nombre de la operación
+void nombreOp(char _cod, char** _nombre){
+    strcpy(*_nombre, opEnum[estadoOperacion(_cod)]);
+} 
+
+// Devuelve el condigo de la operación a partir del nombre
+char codigoOp(char* _nombre){
+    char i = 0;
+    while(i <= 10){
+        if(strcmp(_nombre, enumOp[i])) break;
+        i++;
+    }
+    if(i > 10){
+        printf("\n***ERROR: función codigoOp no se ha encontrado ninguna coincidencia.\n")
+        i = -1;
+    }
+    return i;
+}
 
 //-----------------------------------------------
 // Funciones de entrada/salida de la calculadora
 //-----------------------------------------------
 
-// Muestra la cabecera del programa (BARRA|TEXTOTITULO|\n|BARRA)
+// Muestra la cabecera del programa
 void mostrarTitulo(){
-    printf(BARRA);
-    printf(strcat(TEXTOTITULO,"\n"));
-    printf(BARRA);
+    printf("\n%s\n|%s|\n|%s|\n|%s|\n|%s|\n|%s|\n%s\n",BARRA,ESPACIO,ESPACIO,TEXTOTITULO,ESPACIO,ESPACIO,BARRA);
 }   
 
-// Muestra el menu inicial del programa (\n\n|TEXTOMENU|BARRA)
+// Muestra el menu inicial del programa
 void mostrarMenu(){
-    print("\n\n")
-}     
+    int i;
+    print("\n\n");
+    for(i = 1; i <= 10; i++){
+        printf("%d .- %s\n", i, opEnum[i]);
+    }
+    printf("0 .- %s\n\n%s",opEnum[0],BARRA);
+}
 
 // Lee un valor numérico del teclado entre dos cotas dadas
 int leeValor(char* msg, char* err, int min, int max){
@@ -59,12 +83,7 @@ int leeValor(char* msg, char* err, int min, int max){
         scanf("%d",&r);
     }
     return r;
-}   
-                                        
-// Función que devuelve el nombre de la operación
-void nombreOp(char _cod, char** nombre){
-    strcpy(*nombre, opEnum[estadoOperacion(_cod)]);
-}    
+}
 
 
 
@@ -92,17 +111,17 @@ int ejecutar(char _cod, int _a, int _b){
             r = _a >> _b;
             break;
         default:
-            printf("\n***ERROR: funcion ejecutar con código erroneo.\n")
+            printf("\n***ERROR: funcion ejecutar -> código erroneo.\n")
     }
     return r;
 }
 
-void aBinario(int x, char** bin){
+void aBinario(int _x, char** _bin){
     int i, m;
     m = 1;
     for (i = 0; i < 9; i++){
-        if(x&m) bin[8 - i] = '1';
-        else bin[8 - i] = '0';
+        if(_x&m) _bin[8 - i] = '1';
+        else _bin[8 - i] = '0';
         m <<= 1;
     }
 }
@@ -135,12 +154,16 @@ void guarda(nodo** _mem, int _x, char _f){
     aux->siguiente = NULL;
     switch(_f){
         case 0:
-            
+            aBinario(_x,aux->contenido.dato_binario);
+            break;
         case 1:
+            aux->contenido.dato = _x;
+            break;
         case 2:
-            aux->contenido.operacion = estadoOperacion((char) _x);
+            nombreOp((char)_x,aux->contenido.operacion);
+            break;
         default:
-            printf("\n***ERROR: guardaElemento, formato incorrecto.\n");
+            printf("\n***ERROR: funcion guardaElemento -> formato incorrecto.\n");
             break;
     }
 }
@@ -167,18 +190,41 @@ void guarda(nodo** _mem, char _cod, int _a, int _b,int _r){
     }
 }
 
-void borra(nodo**);     // Función auxiliar para borraMemoria(), borra el último que se haya guardado en memoria
+// Borra el último que se haya guardado en memoria
+void borra(nodo** _mem){
+    nodo * aux = *_mem;
+    if(aux != NULL){
+        if (aux->siguiente == NULL){
+            free(*_mem);
+            *_mem = NULL;
+        }else {
+            while(aux->siguiente->siguiente != NULL) aux = aux->siguiente;
+            free(aux->siguiente);
+            aux->siguiente = NULL;
+        }
+    }
+}
 
+// Imprime el elemento al que apunta el puntero
+int imprime(nodo* _elem){
+    nodo * aux = _elem;
+    printf("\t\t%s", aux->contenido.operacion);
+    if()
+}
 
-void imprime(nodo*);    // Función auxiliar para imprimeMemoria(), imprime el elemento al que apunta el puntero
+// Borra el contenido de la memoria al completo dejando el puntero de entrada como NULL
+void borraMemoria(nodo** _mem){
+    while(_mem != NULL) borra(_mem);
+}
 
-
-void borraMemoria(nodo**);  // Borra el contenido de la memoria al completo dejando el puntero de entrada como NULL
-
-
-void imprimeMemoria(nodo*); // Imprime de forma consecutiva todos los elementos contenidos en memoria hasta la ultima
-                            // entrada (sig == NULL). En caso de recibir memoria vacia escribe la cadena "MEMORIA VACIA"
-
-
-                           
-#endif // Se cierra el if del preprocesador que comprueba si esta libreria ya estaba cargada
+// Imprime de forma consecutiva todos los elementos contenidos en memoria
+void imprimeMemoria(nodo* _mem){
+    nodo * aux = _mem;
+    int i, n;
+    if(mem_ != NULL){
+        while(aux != NULL){
+            n = imprime(aux);
+            for(i = 0; i < n; i++) aux = aux->siguiente;
+        }
+    } else printf("\nMEMORIA VACÍA\n");
+}

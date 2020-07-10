@@ -31,7 +31,7 @@ int main (void){
     
     // Mientras el flag "¿Salir?" este a 0 en la variable estado ejecutamos el 
     // bucle principal del programa
-    while(!(estado&32){
+    while(!estadoSalir(estado)){
         
         // Limpiamos la variable del estado poniendola a 0 (operación SALIR)
         estado &= ~15;
