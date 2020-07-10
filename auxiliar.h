@@ -21,12 +21,12 @@
 
 #define TEXTOTITULO "             Calculadora Binaria Simple             "
 #define BARRA "------------------------------------------------------"
-#define BARRA2 "-------------"
-#define ESPACIO "                                                   "
+#define BARRA2 "----------------"
+#define ESPACIO "                                                    "
 
 static const char Opciones[11][50] = {"SALIR", "OR lógico", "AND lógico", "XOR lógico", "<< (desplazamiento a la izquierda)", ">> (desplazamiento a la derecha)", "Cambio de formato (0→ binario, 1→ hexadecimal)", "Habilitar memoria", "Deshabilitar memoria", "Borrar memoria", "Mostrar el contenido de la memoria"}; // Cadenas con los nombres de las distintas operaciones posibles
 
-static const char Operaciones[6][3] = {"", "OR", "AND", "XOR", "<<", ">>"};
+static const char Operaciones[6][4] = {"", "OR", "AND", "XOR", "<<", ">>"};
 
 
 //----------------------------------------------------------------------------------

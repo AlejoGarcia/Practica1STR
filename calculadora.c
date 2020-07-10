@@ -15,7 +15,7 @@ int main (void){
             // bits 3 a 0: codificación de la operación seleccionada siguiendo la
                 // numeración del menú 
 
-    int a, b, r;    
+    unsigned int a, b, r;    
         // a, b y r funcionan como registros de operación 
         // (a es primer operando, b el segundo y r almacena el resultado)
 
@@ -47,7 +47,7 @@ int main (void){
         
         // Actualizamos el valor del codigo de operacion en estado con el valor recibido
         estado |= (unsigned char) (a&15);
-        printf("Operación seleccionada:\t %s\n", Opciones[estadoOperacion(estado)]);
+        printf("Operación seleccionada: %s\n", Opciones[estadoOperacion(estado)]);
         
         switch(estadoOperacion(estado)){
             case 0:
@@ -61,11 +61,11 @@ int main (void){
             case 5:
                 if(estadoFormato(estado)){
                     printf("Modo hexadecimal, valores de 0 a 4294967295\n");
-                    a = leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 4294967295);
-                    b = leeValor("Introduzca el segundo operando: ", "El valor introducido no es válido", 0, 4294967295);
+                    a = (unsigned int) leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 4294967295);
+                    b = (unsigned int) leeValor("Introduzca el segundo operando: ", "El valor introducido no es válido", 0, 4294967295);
                     printf("\n");
                     r = ejecutar(estado,a,b);
-                    printf("\t\t%x\n\t%s\t%x\n\t%s\n\t\t%x\n", a, Operaciones[estadoOperacion(estado)], b, BARRA2, r);
+                    printf("\t\t%8x\n\t  %s\t%8x\n\t%s\n\t\t%8x\n", a, Operaciones[estadoOperacion(estado)], b, BARRA2, r);
                 } else { 
                     printf("Modo binario, valores de 0 a 511\n");
                     a = leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 511);
@@ -79,9 +79,10 @@ int main (void){
                     aBinario(r, (char**)&bin);
                     printf("%s\n",bin);
                 }
+                  printf("EstadoSalir: %d", estadoSalir(estado));
                 break;
             case 6:
-                a = leeValor("Seleccione el nuevo formato (0 - binario, 1 - hexadecimal): ", "Ese valor es válido\n",0,1);
+                a = leeValor("Seleccione el nuevo formato (0 - binario, 1 - hexadecimal): ", "Ese valor no es válido\n",0,1);
                 if(a){
                    estado |= 64;
                    printf("Formato cambiado a hexadecimal\n");
@@ -111,10 +112,11 @@ int main (void){
             default:
                 printf("Error... volviendo al menu.\n");
                 break;
-        }
-        
+        }    
         // En caso de estar habilitada la memoria, guardamos la operación realizada
+        printf("EstadoSalir: %d (antes de guardar)\n", estadoSalir(estado));
         if(estadoMemoria(estado)) guardaOp(&memoria, estado, a, b, r);
+        printf("EstadoSalir: %d", estadoSalir(estado));
     }
     
     // Tras salir del bucle principial, el programa finaliza

@@ -43,7 +43,7 @@ char codigoOp(char* _nombre){
         i++;
     }
     if(i > 10){
-        printf("\n***ERROR: función codigoOp no se ha encontrado ninguna coincidencia.\n");
+        printf("\n***ERROR: función codigoOp -> No se ha encontrado ninguna coincidencia.\n");
         i = -1;
     }
     return i;
@@ -61,11 +61,11 @@ void mostrarTitulo(){
 // Muestra el menu inicial del programa
 void mostrarMenu(){
     int i;
-    printf("\n\n");
+    printf("\n\n%s\n\n",BARRA);
     for(i = 1; i <= 10; i++){
         printf("%d .- %s\n", i, Opciones[i]);
     }
-    printf("0 .- %s\n\n%s",Opciones[0],BARRA);
+    printf("0 .- %s\n\n%s\n",Opciones[0],BARRA);
 }
 
 // Lee un valor numérico del teclado entre dos cotas dadas
@@ -73,7 +73,7 @@ int leeValor(char* _msg, char* _err, int _min, int _max){
     int r;          
     printf("%s", _msg);
     scanf("%d",&r);
-    while((r < _min)||(r > _max)){
+    while((r < (unsigned int)_min)||(r > (unsigned int)_max)){
         printf("%s\n", _err);
         printf("%s", _msg);
         scanf("%d",&r);
@@ -107,7 +107,7 @@ int ejecutar(char _cod, int _a, int _b){
             r = _a >> _b;
             break;
         default:
-            printf("\n***ERROR: funcion ejecutar -> código erroneo.\n");
+            printf("\n***ERROR: funcion ejecutar -> Código erroneo.\n");
     }
     return r;
 }
@@ -139,30 +139,42 @@ de cada operación). Todos los datos numéricos se guardarán en el formato en e
 
 // Guarda un elemento
 void guardaElemento(node** _mem, int _x, char _f){
-    node * aux = *_mem;
-    if(aux == NULL){
-        aux = (node*) malloc(sizeof(node));
+    printf("##################Entra en guardaElemento (valores: nodo = %p, *nodo = %p, dato = %u, formato = %u\n",_mem,*_mem, _x, _f);
+    node * aux;
+    if(*_mem == NULL){
+printf("##################En guardaElemento: primer elemento a guardar (valores: nodo = %p, *nodo = %p, dato = %u, formato = %u\n",_mem,*_mem, _x, _f);
+        *_mem = (node*) malloc(sizeof(node));
+        aux = *_mem;
     } else{
-        while(aux->siguiente != NULL) aux = aux->siguiente;
+        aux = *_mem;
+printf("##################En guardaElemento: no es el primer elemento (valores: nodo = %p, *nodo = %p, dato = %u, formato = %u\n",_mem,*_mem, _x, _f);
+        while(aux->siguiente != NULL){
+            aux = aux->siguiente;
+            printf("##################En guardaElemento: bucle sobre _mem (valores: aux = %p, aux->sig = %p)", aux, aux->siguiente);
+        }
+        printf("##################En guardaElemento: antes de crear nuevo nodo (valores: aux = %p, aux->sig = %p)", aux, aux->siguiente);
         aux->siguiente = (node*) malloc(sizeof(node));
+        printf("##################En guardaElemento: creando nuevo nodo (valores: aux = %p, aux->sig = %p)", aux, aux->siguiente);
         aux = aux->siguiente;
     }
+    printf("##################En guardaElemento: estamos en el ultimo nodo (valores: nodo = %p, *nodo = %p, dato = %u, formato = %u\n",aux,*_mem, _x, _f);
     aux->siguiente = NULL;
     switch(_f){
         case 0:
-            aBinario(_x,(char**)&(aux->contenido.dato_binario));
+            aBinario((unsigned int)_x,(char**)&(aux->contenido.dato_binario));
             break;
         case 1:
             aux->contenido.dato = _x;
             break;
         case 2:
-            nombreOp((char)_x,(char**)&(aux->contenido.operacion));
+            nombreOp((unsigned char)_x,(char**)&(aux->contenido.operacion));
             aux->contenido.operacion[49] = _f;
             break;
         default:
-            printf("\n***ERROR: funcion guardaElemento -> formato incorrecto.\n");
+            printf("\n***ERROR: funcion guardaElemento -> Formato incorrecto.\n");
             break;
     }
+    printf("##################Sale guardaElemento\n");
 }
 
 // Guarda una operacion
@@ -170,6 +182,8 @@ void guardaOp(node** _mem, char _cod, int _a, int _b,int _r){
     char formato = estadoFormato(_cod);
     guardaElemento(_mem, (int) _cod, 2);
     switch(estadoOperacion(_cod)){
+        case 0:
+            break;
         case 1:
         case 2:
         case 3:
@@ -181,6 +195,11 @@ void guardaOp(node** _mem, char _cod, int _a, int _b,int _r){
             break;
         case 6:
             guardaElemento(_mem,_a,1);
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 10:
             break;
         default:
             printf("\n***ERROR: función guardaOp -> Operación inexistente.\n");
@@ -240,7 +259,7 @@ char imprimeElem(node* _elem){
 
 // Borra el contenido de la memoria al completo dejando el puntero de entrada como NULL
 void borraMemoria(node** _mem){
-    while(_mem != NULL) borra(_mem);
+    while(*_mem != NULL) borra(_mem);
 }
 
 // Imprime de forma consecutiva todos los elementos contenidos en memoria
@@ -255,5 +274,5 @@ void imprimeMemoria(node* _mem){
             for(i = 0; i < n; i++) aux = aux->siguiente;
             k++;
         }
-    } else printf("\nMEMORIA VACÍA\n");
+    } else printf("\t%s\n\tMEMORIA VACÍA\n\t%s\n",BARRA2,BARRA2);
 }
