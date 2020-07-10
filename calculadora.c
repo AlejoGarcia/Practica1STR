@@ -19,7 +19,7 @@ int main (void){
         // a, b y r funcionan como registros de operación 
         // (a es primer operando, b el segundo y r almacena el resultado)
 
-    char bin[9];
+    char bin[9] = "";
         // variable auxiliar para realizar las conversiones a formato binario
 
     node * memoria = NULL;   
@@ -47,9 +47,9 @@ int main (void){
         
         // Actualizamos el valor del codigo de operacion en estado con el valor recibido
         estado |= (unsigned char) (a&15);
-        printf("Operación seleccionada:\t %s\n", opEnum[estadoOperacion(estado)]);
+        printf("Operación seleccionada:\t %s\n", Opciones[estadoOperacion(estado)]);
         
-        switch(operacionEstado(estado)){
+        switch(estadoOperacion(estado)){
             case 0:
                 printf("Saliendo del programa... \n");
                 estado |= 32;
@@ -61,22 +61,22 @@ int main (void){
             case 5:
                 if(estadoFormato(estado)){
                     printf("Modo hexadecimal, valores de 0 a 4294967295\n");
-                    a = leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 4294967295)
+                    a = leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 4294967295);
                     b = leeValor("Introduzca el segundo operando: ", "El valor introducido no es válido", 0, 4294967295);
                     printf("\n");
                     r = ejecutar(estado,a,b);
-                    printf("\t\t%x\n\t%s\t%x\n\t%s\n\t\t%x\n", a, soloOp[estadoOperacion(estado)], b, BARRA2, r);
+                    printf("\t\t%x\n\t%s\t%x\n\t%s\n\t\t%x\n", a, Operaciones[estadoOperacion(estado)], b, BARRA2, r);
                 } else { 
                     printf("Modo binario, valores de 0 a 511\n");
                     a = leeValor("Introduzca el primer operando: ", "El valor introducido no es válido", 0, 511);
                     b = leeValor("Introduzca el segundo operando: ", "El valor introducido no es válido", 0, 511);
                     printf("\n");
                     r = ejecutar(estado,a,b);
-                    aBinario(a, &bin);
-                    printf("\t\t%s\n\t%s\t", bin, soloOp[estadoOperacion(estado)]);
-                    aBinario(b, &bin);
+                    aBinario(a, (char**)&bin);
+                    printf("\t\t%s\n\t%s\t", bin, Operaciones[estadoOperacion(estado)]);
+                    aBinario(b, (char**)&bin);
                     printf("%s\n\t%s\n\t\t", bin, BARRA2);
-                    aBinario(r, &bin);
+                    aBinario(r, (char**)&bin);
                     printf("%s\n",bin);
                 }
                 break;
@@ -100,7 +100,7 @@ int main (void){
                 break;
             case 9:
                 printf("Borrando el contenido de la memoria...\n");
-                borraMemoria(memoria);
+                borraMemoria(&memoria);
                 if(memoria == NULL) printf("Memoria borrada\n");
                 else printf("Error al borrar memoria.\n");
                 break;
@@ -114,7 +114,7 @@ int main (void){
         }
         
         // En caso de estar habilitada la memoria, guardamos la operación realizada
-        if(estadoMemoria(estado)) guardaOp(memoria, estado, a, b, r);
+        if(estadoMemoria(estado)) guardaOp(&memoria, estado, a, b, r);
     }
     
     // Tras salir del bucle principial, el programa finaliza

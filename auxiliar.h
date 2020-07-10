@@ -7,7 +7,7 @@
 
 // Comprobamos que no se haya importado antes para no importarlo dos veces
 
-#ifndf AUXILIAR_H
+#ifndef AUXILIAR_H
 #define AUXILIAR_H
 
 
@@ -18,8 +18,8 @@
 #define BARRA "------------------------------------------------------"
 #define BARRA2 "-------------"
 #define ESPACIO "                                                    "
-enum opEnum = {"SALIR", "OR lógico", "AND lógico", "XOR lógico", "<< (desplazamiento a la izquierda)", ">> (desplazamiento a la derecha)", "Cambio de formato (0→ binario, 1→ hexadecimal)", "Habilitar memoria", "Deshabilitar memoria", "Borrar memoria", "Mostrar el contenido de la memoria"}; // Cadenas con los nombres de las distintas operaciones posibles
-enum soloOp = {"OR" = 1, "AND" = 2, "XOR" = 3, "<<" = 4, ">>" = 5};
+char Opciones[11][50] = {"SALIR", "OR lógico", "AND lógico", "XOR lógico", "<< (desplazamiento a la izquierda)", ">> (desplazamiento a la derecha)", "Cambio de formato (0→ binario, 1→ hexadecimal)", "Habilitar memoria", "Deshabilitar memoria", "Borrar memoria", "Mostrar el contenido de la memoria"}; // Cadenas con los nombres de las distintas operaciones posibles
+char Operaciones[6][3] = {"", "OR", "AND", "XOR", "<<", ">>"};
 
 
 //----------------------------------------------------------------------------------
@@ -95,22 +95,22 @@ de cada operación). Todos los datos numericos se guardarán en el formato en el
 */
 
 
-void guardaElemento(nodo**, int, char); // Guarda un elemento asignado el tipo adecuado en función del formato
+void guardaElemento(node**, int, char); // Guarda un elemento asignado el tipo adecuado en función del formato
                                         // siendo 0 un operando binario, 1 un operando hexadecimal y 2 una cadena
                                         // cadena descripitiva de operación. En este último caso se utilizará el 
                                         // caracter ultimo (numero 49) para almacenar el formato en el que se guardan
                                         // los operandos
 
-void guardaOp(nodo**, char, int, int, int); // Guarda un elemento completo en la calculadora del tipo:
+void guardaOp(node**, char, int, int, int); // Guarda un elemento completo en la calculadora del tipo:
                                             // [operación] [argumento/s(opcional)]
 
-void borra(nodo**);     // Función auxiliar para borraMemoria(), borra el último que se haya guardado en memoria
+void borra(node**);     // Función auxiliar para borraMemoria(), borra el último que se haya guardado en memoria
 
-char imprimeElem(nodo*);    // Función auxiliar para imprimeMemoria(), imprime el elemento al que apunta el puntero
+char imprimeElem(node*);    // Función auxiliar para imprimeMemoria(), imprime el elemento al que apunta el puntero
 
-void borraMemoria(nodo**);  // Borra el contenido de la memoria al completo dejando el puntero de entrada como NULL
+void borraMemoria(node**);  // Borra el contenido de la memoria al completo dejando el puntero de entrada como NULL
 
-void imprimeMemoria(nodo*); // Imprime de forma consecutiva todos los elementos contenidos en memoria hasta la ultima
+void imprimeMemoria(node*); // Imprime de forma consecutiva todos los elementos contenidos en memoria hasta la ultima
                             // entrada (sig == NULL). En caso de recibir memoria vacia escribe la cadena "MEMORIA VACIA"
 
 
