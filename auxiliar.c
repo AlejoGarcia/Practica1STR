@@ -56,7 +56,7 @@ char codigoOp(char* _nombre){
 // Muestra la cabecera del programa
 void mostrarTitulo(){
     printf("\n%s\n|%s|\n|%s|\n|%s|\n|%s|\n|%s|\n%s\n",BARRA,ESPACIO,ESPACIO,TEXTOTITULO,ESPACIO,ESPACIO,BARRA);
-}   
+}
 
 // Muestra el menu inicial del programa
 void mostrarMenu(){
@@ -70,7 +70,7 @@ void mostrarMenu(){
 
 // Lee un valor numérico del teclado entre dos cotas dadas
 int leeValor(char* _msg, char* _err, int _min, int _max){
-    int r;          
+    int r;
     printf("%s", _msg);
     scanf("%d",&r);
     while((r < (unsigned int)_min)||(r > (unsigned int)_max)){
@@ -219,7 +219,7 @@ void borra(node** _mem){
             while(aux->siguiente != NULL){
                 aux2 = aux;
                 aux = aux->siguiente;
-            } 
+            }
             free(aux);
             aux2->siguiente = NULL;
         }

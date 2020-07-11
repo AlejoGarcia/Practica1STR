@@ -121,5 +121,5 @@ void imprimeMemoria(node*); // Imprime de forma consecutiva todos los elementos 
                             // entrada (sig == NULL). En caso de recibir memoria vacia escribe la cadena "MEMORIA VACIA"
 
 
-                           
+
 #endif // Se cierra el if del preprocesador que comprueba si esta libreria ya estaba cargada
